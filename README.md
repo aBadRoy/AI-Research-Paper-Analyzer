@@ -2,80 +2,59 @@
   <br>
   <img src="https://img.shields.io/badge/Python-3.8%2B-blue?style=for-the-badge&logo=python&logoColor=white" alt="Python">
   <img src="https://img.shields.io/badge/Flask-3.0-black?style=for-the-badge&logo=flask&logoColor=white" alt="Flask">
-  <img src="https://img.shields.io/badge/Bootstrap-5.3-purple?style=for-the-badge&logo=bootstrap&logoColor=white" alt="Bootstrap">
+  <img src="https://img.shields.io/badge/ChromaDB-5C5CFF?style=for-the-badge&logo=chroma&logoColor=white" alt="ChromaDB">
   <img src="https://img.shields.io/badge/Gemini%20AI-4285F4?style=for-the-badge&logo=google&logoColor=white" alt="Gemini AI">
   <img src="https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white" alt="SQLite">
   <br>
-  <img src="https://img.shields.io/github/license/aBadRoy/AI-Research-Paper-Analyzer?style=flat-square" alt="License">
+  <img src="https://img.shields.io/badge/license-MIT-green?style=flat-square" alt="License">
   <img src="https://img.shields.io/badge/status-production-green?style=flat-square" alt="Status">
-  <img src="https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat-square" alt="PRs Welcome">
 
   <br><br>
 
-  <!-- Replace with your actual screenshot -->
-  <!-- <img src="screenshots/banner.png" alt="Application Banner" width="800"> -->
-
   <h1>AI Research Paper Analyzer</h1>
   <p>
-    <strong>A smart web application that analyzes research paper PDFs using Google's Gemini AI</strong>
+    <strong>Upload a research paper &middot; Get instant AI analysis &middot; Chat with your paper</strong>
   </p>
   <p>
-    Upload a research paper &middot; Get instant AI analysis &middot; Download professional reports
+    A full-stack web application powered by Google Gemini AI with RAG-based chat, real-time progress tracking, and vector search.
   </p>
   <br>
 </div>
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 
-- [Overview](#-overview)
-- [Features](#-features)
-- [Tech Stack](#-tech-stack)
-- [Architecture](#-architecture)
-- [Project Structure](#-project-structure)
-- [Database Schema](#-database-schema)
-- [Installation](#-installation)
-- [Usage](#-usage)
-- [Screenshots](#-screenshots)
-- [API Reference](#-api-reference)
-- [Security](#-security)
-- [Future Scope](#-future-scope)
-- [Contributing](#-contributing)
-- [License](#-license)
-- [Contact](#-contact)
+- [Overview](#overview)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Architecture](#architecture)
+- [Project Structure](#project-structure)
+- [Installation](#installation)
+- [Usage](#usage)
+- [RAG Chat System](#-rag-chat-system)
+- [API Reference](#api-reference)
+- [Security](#security)
+- [Contributing](#contributing)
+- [License](#license)
 
 ---
 
-## 📖 Overview
+## Overview
 
-**AI Research Paper Analyzer** is a full-stack web application designed for students and researchers to streamline the process of understanding research papers. Simply upload a PDF, and the system leverages **Google Gemini AI** to generate:
+**AI Research Paper Analyzer** is a production-ready web application that helps students and researchers understand academic papers faster. Upload a PDF, and the system leverages **Google Gemini AI** with **Retrieval-Augmented Generation (RAG)** to deliver:
 
-- Structured summaries
-- Keyword extraction
-- Viva voce questions
-- Multiple-choice questions
-- Deep research insights
-
-All results can be downloaded as a professional PDF report.
+- Structured summaries with key insights
+- Interactive chat — ask questions about the paper
+- Keyword extraction and research analysis
+- Practice questions (viva & MCQ generation)
+- Professional PDF report downloads
 
 ---
 
-## ✨ Features
+## Features
 
-### 🔐 User Authentication
-- Secure registration and login
-- Password hashing with **bcrypt**
-- Session management with **Flask-Login**
-
-### 📄 PDF Upload & Processing
-- Drag-and-drop file upload
-- PDF format validation
-- Secure filename sanitization
-- Text extraction using **pdfplumber**
-
-### 🤖 AI-Powered Analysis (Gemini API)
-
+### AI-Powered Analysis
 | Feature | Description |
 |---------|-------------|
 | **Summary** | Structured breakdown: Introduction, Objective, Methodology, Results, Conclusion |
@@ -84,30 +63,36 @@ All results can be downloaded as a professional PDF report.
 | **MCQs** | 20 multiple-choice questions with correct answers |
 | **Research Insights** | Problem, Gap, Methodology, Limitations, Future Scope |
 
-### 📊 Results Dashboard
-- Clean Bootstrap 5 card layout
-- Color-coded sections for easy navigation
-- Responsive design for all devices
+### RAG Chat System
+- **Conversational Q&A** — Ask follow-up questions about any paper
+- **Vector Search** — ChromaDB stores chunk embeddings for semantic retrieval
+- **Context-Aware Answers** — Only relevant sections are sent to Gemini for accurate responses
+- **Real-time Streaming UI** — Typing indicators and smooth message delivery
 
-### 📑 PDF Report Generation
-- Professional report layout using **ReportLab**
-- One-click download
-- Includes all analysis sections
+### Real-Time Progress Tracking
+- **Live Progress Bar** — Animated progress with step descriptions
+- **Background Processing** — Analysis runs in a separate thread, non-blocking
+- **Step-by-step Updates** — See each phase: extracting → chunking → embedding → analyzing
 
-### 📚 Analysis History
-- Persistent storage in SQLite
-- View past analyses anytime
+### User Experience
+- Secure registration and login with bcrypt hashing
+- Drag-and-drop PDF upload with validation
+- Analysis history with one-click revisit
+- Professional PDF report download (ReportLab)
+- Responsive Bootstrap 5 design
+- Custom error pages (404, 413, 500)
 
 ---
 
-## 🛠 Tech Stack
+## Tech Stack
 
 | Layer | Technology |
 |-------|-----------|
 | **Backend** | Python 3.8+, Flask 3.0 |
 | **Frontend** | HTML5, CSS3, Bootstrap 5.3 |
 | **Database** | SQLite 3 (WAL mode) |
-| **AI Engine** | Google Gemini API (`gemini-pro`) |
+| **Vector Store** | ChromaDB (persistent, with Gemini embeddings) |
+| **AI Engine** | Google Gemini API (`gemini-2.5-flash`, `gemini-embedding-001`) |
 | **PDF Parsing** | pdfplumber |
 | **PDF Generation** | ReportLab |
 | **Authentication** | Flask-Bcrypt, Flask-Login |
@@ -115,36 +100,38 @@ All results can be downloaded as a professional PDF report.
 
 ---
 
-## 🏗 Architecture
+## Architecture
 
 ```
-┌─────────────┐     ┌──────────────┐     ┌─────────────┐
-│   Browser   │────▶│   Flask App  │────▶│   SQLite DB │
-│  (Bootstrap) │     │   (Python)   │     │             │
-└─────────────┘     └──────┬───────┘     └─────────────┘
-                           │
-                    ┌──────▼───────┐
-                    │  Google Gemini│
-                    │     API      │
+┌─────────────┐     ┌──────────────┐     ┌─────────────┐     ┌──────────────┐
+│   Browser   │────▶│   Flask App  │────▶│   SQLite DB │     │   ChromaDB   │
+│  (Bootstrap) │     │   (Python)   │     │             │     │  (Vectors)   │
+└─────────────┘     └──────┬───────┘     └─────────────┘     └──────────────┘
+                           │                                         ▲
+                    ┌──────▼───────┐                                  │
+                    │  Google Gemini│──────────────────────────────────┘
+                    │     API      │  Embeddings + Generation
                     └──────────────┘
 ```
 
 1. User uploads a PDF through the browser
-2. Flask validates and saves the file
-3. **pdfplumber** extracts text from the PDF
-4. Text is sent to **Google Gemini API** with specialized prompts
-5. AI responses are stored in **SQLite**
-6. Results are displayed in the Bootstrap dashboard
-7. User can download a **PDF report** generated by ReportLab
+2. Flask saves the file and spawns a background analysis thread
+3. The processing page polls a progress endpoint for real-time updates
+4. **pdfplumber** extracts text, which is chunked and embedded via Gemini
+5. Embeddings are stored in **ChromaDB** for semantic search
+6. Text is sent to **Gemini API** for summary, keywords, questions, and insights
+7. Results are stored in **SQLite** and displayed in the dashboard
+8. Users can **chat** with the paper — questions are answered using RAG retrieval
+9. A professional **PDF report** can be downloaded at any time
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 AI-RESEARCH-PAPER-ANALYZER/
 │
-├── app.py                      # Main Flask application entry point
+├── app.py                      # Main Flask application
 ├── requirements.txt            # Python dependencies
 ├── .env.example                # Environment variable template
 ├── .gitignore                  # Git ignore rules
@@ -152,17 +139,18 @@ AI-RESEARCH-PAPER-ANALYZER/
 ├── README.md                   # Project documentation
 │
 ├── database/
-│   ├── .gitkeep                # Ensures directory is tracked
-│   └── app.db                  # SQLite database (auto-generated)
+│   └── .gitkeep                # SQLite database directory
 │
-├── uploads/                    # Uploaded PDF files
-│   └── .gitkeep
+├── uploads/
+│   └── .gitkeep                # Uploaded PDFs directory
 │
-├── reports/                    # Generated PDF reports
-│   └── .gitkeep
+├── reports/
+│   └── .gitkeep                # Generated PDF reports directory
+│
+├── chroma_db/                  # ChromaDB persistent storage (gitignored)
 │
 ├── static/
-│   └── style.css               # Custom CSS styles
+│   └── style.css               # Custom styles including chat UI
 │
 ├── templates/
 │   ├── base.html               # Base template with navigation
@@ -170,7 +158,8 @@ AI-RESEARCH-PAPER-ANALYZER/
 │   ├── login.html              # Login form
 │   ├── register.html           # Registration form
 │   ├── dashboard.html          # User dashboard with upload & history
-│   ├── result.html             # Analysis results display
+│   ├── processing.html         # Real-time progress bar page
+│   ├── result.html             # Analysis results + chat interface
 │   ├── 404.html                # Not found error page
 │   └── 500.html                # Server error page
 │
@@ -184,48 +173,13 @@ AI-RESEARCH-PAPER-ANALYZER/
 
 ---
 
-## 🗄 Database Schema
-
-### `users` Table
-
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| `id` | INTEGER | PRIMARY KEY AUTOINCREMENT | Unique user ID |
-| `username` | TEXT | UNIQUE NOT NULL | Login username |
-| `email` | TEXT | UNIQUE NOT NULL | Email address |
-| `password_hash` | TEXT | NOT NULL | bcrypt hashed password |
-
-### `uploaded_files` Table
-
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| `id` | INTEGER | PRIMARY KEY AUTOINCREMENT | Unique file ID |
-| `user_id` | INTEGER | NOT NULL, FK → users(id) ON DELETE CASCADE | Owner |
-| `filename` | TEXT | NOT NULL | Stored filename |
-| `upload_date` | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Upload time |
-
-### `analysis_results` Table
-
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| `id` | INTEGER | PRIMARY KEY AUTOINCREMENT | Unique result ID |
-| `file_id` | INTEGER | NOT NULL, FK → uploaded_files(id) ON DELETE CASCADE | Source file |
-| `summary` | TEXT | | AI-generated summary |
-| `keywords` | TEXT | | Extracted keywords |
-| `viva_questions` | TEXT | | Generated viva questions |
-| `mcqs` | TEXT | | Multiple-choice questions |
-| `research_insights` | TEXT | | Research analysis |
-| `generated_date` | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Analysis time |
-
----
-
-## 🚀 Installation
+## Installation
 
 ### Prerequisites
 
 - **Python 3.8+** — [Download Python](https://www.python.org/downloads/)
 - **pip** — Python package manager (comes with Python)
-- **Google Gemini API Key** — [Get one free](https://makersuite.google.com/app/apikey)
+- **Google Gemini API Key** — [Get one free](https://aistudio.google.com/app/apikey)
 
 ### Step 1: Clone the Repository
 
@@ -281,7 +235,7 @@ Open your browser and navigate to: **http://127.0.0.1:5000**
 
 ---
 
-## 📖 Usage
+## Usage
 
 ### 1. Register an Account
 - Navigate to `/register`
@@ -293,42 +247,57 @@ Open your browser and navigate to: **http://127.0.0.1:5000**
 ### 3. Upload a Research Paper
 - From the dashboard, click "Choose File" and select a PDF
 - Click "Upload & Analyze"
-- Wait while the AI processes the paper (10–30 seconds)
+- **Watch the real-time progress bar** showing each analysis step
 
 ### 4. View Results
 - The results page displays five analysis sections in organized cards:
-  - **Summary** (blue header)
-  - **Keywords** (green header)
-  - **Viva Questions** (info header)
-  - **Multiple Choice Questions** (warning header)
-  - **Research Insights** (danger header)
+  - **Summary** — Structured breakdown of the paper
+  - **Keywords** — Top 20 extracted terms
+  - **Viva Questions** — Oral exam practice questions
+  - **Multiple Choice Questions** — Test your understanding
+  - **Research Insights** — Deep analysis of contributions and limitations
 
-### 5. Download Report
+### 5. Chat with Your Paper
+- Expand the **"Chat with this Paper"** section at the bottom
+- Ask questions like:
+  - "What methodology was used in this paper?"
+  - "What are the key findings?"
+  - "Explain the experiment design"
+  - "What are the limitations mentioned?"
+- Answers are generated using **RAG** — only the most relevant sections are retrieved
+
+### 6. Download Report
 - Click "Download PDF Report" to get a complete analysis document
 
-### 6. Review History
+### 7. Review History
 - All past analyses are listed in the dashboard table
 - Click "View" to revisit any previous result
 
 ---
 
-## 📸 Screenshots
+## 🤖 RAG Chat System
 
-<!-- Capture and add screenshots to the screenshots/ folder -->
+The chat feature uses **Retrieval-Augmented Generation** to provide accurate, context-aware answers:
 
-| Page | Preview |
-|------|---------|
-| **Homepage** | ![Homepage](screenshots/home.png) |
-| **Login** | ![Login](screenshots/login.png) |
-| **Register** | ![Register](screenshots/register.png) |
-| **Dashboard** | ![Dashboard](screenshots/dashboard.png) |
-| **Results** | ![Results](screenshots/results.png) |
+### How It Works
 
-> **Note:** Replace the placeholder images with actual screenshots of your running application. You can use the `screenshots/` directory for this purpose.
+1. **Text Chunking** — Extracted PDF text is split into overlapping chunks (~1000 chars each) at natural boundaries
+2. **Embedding** — Each chunk is embedded using Google's `gemini-embedding-001` model (3072 dimensions)
+3. **Vector Storage** — Embeddings are stored in a persistent **ChromaDB** collection
+4. **Semantic Search** — When a question is asked, it's embedded and matched against stored chunks
+5. **Context Assembly** — The top-5 most relevant chunks are combined as context
+6. **Answer Generation** — Gemini generates an answer using only the retrieved context
+
+### Benefits
+
+- ✅ **No hallucination** — Answers are grounded in the actual paper content
+- ✅ **Fast retrieval** — Semantic search finds relevant sections instantly
+- ✅ **Persistent storage** — ChromaDB saves vectors to disk between sessions
+- ✅ **Scalable** — Handles papers of any length efficiently
 
 ---
 
-## 🌐 API Reference
+## API Reference
 
 ### Web Routes
 
@@ -339,9 +308,33 @@ Open your browser and navigate to: **http://127.0.0.1:5000**
 | `/login` | GET, POST | No | User login |
 | `/logout` | GET | Yes | Log out |
 | `/dashboard` | GET | Yes | User dashboard |
-| `/upload` | POST | Yes | Upload PDF & analyze |
+| `/upload` | POST | Yes | Upload PDF |
+| `/processing/<file_id>` | GET | Yes | Real-time progress view |
 | `/result/<id>` | GET | Yes | View analysis results |
 | `/download_report/<id>` | GET | Yes | Download PDF report |
+
+### API Endpoints
+
+| Endpoint | Method | Auth | Description |
+|----------|--------|------|-------------|
+| `/api/progress/<file_id>` | GET | Yes | Poll analysis progress |
+| `/api/chat/<result_id>` | POST | Yes | Chat with paper (RAG) |
+
+### Chat API Format
+
+**Request:**
+```json
+{
+  "message": "What methodology was used in this paper?"
+}
+```
+
+**Response:**
+```json
+{
+  "reply": "The paper employs a transformer-based architecture..."
+}
+```
 
 ### Status Codes
 
@@ -355,7 +348,7 @@ Open your browser and navigate to: **http://127.0.0.1:5000**
 
 ---
 
-## 🔒 Security
+## Security
 
 | Measure | Implementation |
 |---------|---------------|
@@ -371,20 +364,7 @@ Open your browser and navigate to: **http://127.0.0.1:5000**
 
 ---
 
-## 🔮 Future Scope
-
-- [ ] **AI Chat** — Ask questions about the uploaded paper using RAG (LangChain + FAISS)
-- [ ] **Batch Upload** — Analyze multiple papers at once
-- [ ] **Export Formats** — Support DOCX, TXT, JSON exports
-- [ ] **Email Reports** — Send analysis reports via email
-- [ ] **Dashboard Charts** — Visual analytics of paper metadata
-- [ ] **Multi-language Support** — Analyze papers in various languages
-- [ ] **Docker Deployment** — Containerized setup for easy hosting
-- [ ] **OAuth Login** — Google/GitHub social login
-
----
-
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Here's how you can help:
 
@@ -398,17 +378,9 @@ Please ensure your code follows the existing style and includes appropriate docu
 
 ---
 
-## 📄 License
+## License
 
 Distributed under the **MIT License**. See [`LICENSE`](LICENSE) for more information.
-
----
-
-## 📬 Contact
-
-**Project Maintainer** — [aBadRoy](https://github.com/aBadRoy)
-
-Project Link: [https://github.com/aBadRoy/AI-Research-Paper-Analyzer](https://github.com/aBadRoy/AI-Research-Paper-Analyzer)
 
 ---
 

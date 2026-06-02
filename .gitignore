@@ -42,3 +42,10 @@ chroma_db/
 
 # Logs
 *.log
+
+# Local utilities
+start_server.vbs
+kill_port.ps1
+
+# Sample PDF
+test_demo.pdf
