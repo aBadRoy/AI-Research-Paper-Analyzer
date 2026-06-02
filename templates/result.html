@@ -1,0 +1,240 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+    <h4 class="fw-bold mb-0">
+        <i class="bi bi-file-earmark-text text-primary"></i> Analysis Results
+    </h4>
+    <div>
+        <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary me-2">
+            <i class="bi bi-arrow-left"></i> Back to Dashboard
+        </a>
+        <a href="{{ url_for('download_report', result_id=result_id) }}" class="btn btn-success">
+            <i class="bi bi-download"></i> Download PDF Report
+        </a>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0 rounded-3 mb-4">
+    <div class="card-body">
+        <div class="d-flex align-items-center">
+            <i class="bi bi-file-earmark-pdf text-danger me-3" style="font-size: 2rem;"></i>
+            <div>
+                <h5 class="mb-1 fw-bold">{{ paper_name }}</h5>
+                <small class="text-muted">
+                    <i class="bi bi-calendar3"></i> Analyzed on: {{ analysis.generated_date }}
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-12">
+        <div class="card shadow-sm border-0 rounded-3 h-100">
+            <div class="card-header bg-primary text-white py-3 rounded-top-3">
+                <h5 class="mb-0"><i class="bi bi-card-text"></i> Summary</h5>
+            </div>
+            <div class="card-body">
+                <pre class="analysis-text">{{ summary }}</pre>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card shadow-sm border-0 rounded-3 h-100">
+            <div class="card-header bg-success text-white py-3 rounded-top-3">
+                <h5 class="mb-0"><i class="bi bi-tags"></i> Keywords</h5>
+            </div>
+            <div class="card-body">
+                <pre class="analysis-text">{{ keywords }}</pre>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card shadow-sm border-0 rounded-3 h-100">
+            <div class="card-header bg-info text-white py-3 rounded-top-3">
+                <h5 class="mb-0"><i class="bi bi-question-circle"></i> Viva Questions</h5>
+            </div>
+            <div class="card-body">
+                <pre class="analysis-text">{{ viva }}</pre>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card shadow-sm border-0 rounded-3 h-100">
+            <div class="card-header bg-warning text-dark py-3 rounded-top-3">
+                <h5 class="mb-0"><i class="bi bi-list-check"></i> Multiple Choice Questions</h5>
+            </div>
+            <div class="card-body">
+                <pre class="analysis-text">{{ mcqs }}</pre>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card shadow-sm border-0 rounded-3 h-100">
+            <div class="card-header bg-danger text-white py-3 rounded-top-3">
+                <h5 class="mb-0"><i class="bi bi-lightbulb"></i> Research Insights</h5>
+            </div>
+            <div class="card-body">
+                <pre class="analysis-text">{{ insights }}</pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if has_vector_store %}
+<div class="card shadow-sm border-0 rounded-3 mt-4">
+    <div class="card-header bg-dark text-white py-3 rounded-top-3 d-flex justify-content-between align-items-center"
+         data-bs-toggle="collapse" data-bs-target="#chatCollapse" role="button" aria-expanded="true"
+         aria-controls="chatCollapse">
+        <h5 class="mb-0"><i class="bi bi-chat-dots"></i> Chat with this Paper</h5>
+        <i class="bi bi-chevron-down" id="chatToggleIcon"></i>
+    </div>
+    <div class="collapse show" id="chatCollapse">
+        <div class="card-body">
+            <div id="chatMessages" class="chat-container mb-3">
+                <div class="chat-message bot-message">
+                    <div class="chat-avatar bg-secondary">
+                        <i class="bi bi-robot"></i>
+                    </div>
+                    <div class="chat-bubble">
+                        <small class="fw-bold text-secondary">AI Assistant</small>
+                        <p class="mb-0 mt-1">Ask me anything about this research paper! I can answer questions about the methodology, findings, conclusions, or any specific aspect of the paper.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="input-group">
+                <input type="text" id="chatInput" class="form-control"
+                       placeholder="Ask a question about this paper..."
+                       autocomplete="off">
+                <button class="btn btn-primary" id="sendBtn" onclick="sendMessage()">
+                    <i class="bi bi-send"></i> Send
+                </button>
+            </div>
+            <div class="mt-2">
+                <small class="text-muted"><i class="bi bi-info-circle"></i> Answers are generated based on the paper's content using RAG (Retrieval-Augmented Generation).</small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+const RESULT_ID = {{ result_id }};
+
+function addMessage(text, sender) {
+    const container = document.getElementById('chatMessages');
+    const div = document.createElement('div');
+    div.className = 'chat-message ' + (sender === 'user' ? 'user-message' : 'bot-message');
+
+    if (sender === 'user') {
+        div.innerHTML = `
+            <div class="chat-bubble user-bubble">
+                <p class="mb-0">${escapeHtml(text)}</p>
+            </div>
+            <div class="chat-avatar bg-primary">
+                <i class="bi bi-person"></i>
+            </div>
+        `;
+    } else {
+        div.innerHTML = `
+            <div class="chat-avatar bg-secondary">
+                <i class="bi bi-robot"></i>
+            </div>
+            <div class="chat-bubble bot-bubble">
+                <small class="fw-bold text-secondary">AI Assistant</small>
+                <p class="mb-0 mt-1">${escapeHtml(text)}</p>
+            </div>
+        `;
+    }
+    container.appendChild(div);
+    container.scrollTop = container.scrollHeight;
+}
+
+function addLoadingIndicator() {
+    const container = document.getElementById('chatMessages');
+    const div = document.createElement('div');
+    div.className = 'chat-message bot-message';
+    div.id = 'chatLoading';
+    div.innerHTML = `
+        <div class="chat-avatar bg-secondary">
+            <i class="bi bi-robot"></i>
+        </div>
+        <div class="chat-bubble bot-bubble">
+            <small class="fw-bold text-secondary">AI Assistant</small>
+            <div class="mt-1">
+                <span class="typing-dot"></span>
+                <span class="typing-dot"></span>
+                <span class="typing-dot"></span>
+            </div>
+        </div>
+    `;
+    container.appendChild(div);
+    container.scrollTop = container.scrollHeight;
+}
+
+function removeLoadingIndicator() {
+    const el = document.getElementById('chatLoading');
+    if (el) el.remove();
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+function sendMessage() {
+    const input = document.getElementById('chatInput');
+    const msg = input.value.trim();
+    if (!msg) return;
+
+    addMessage(msg, 'user');
+    input.value = '';
+    input.disabled = true;
+    document.getElementById('sendBtn').disabled = true;
+    addLoadingIndicator();
+
+    fetch('/api/chat/' + RESULT_ID, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: msg })
+    })
+    .then(r => r.json().then(data => ({ status: r.status, data })))
+    .then(({ status, data }) => {
+        removeLoadingIndicator();
+        addMessage(data.reply || 'No response received.', 'bot');
+    })
+    .catch(err => {
+        removeLoadingIndicator();
+        addMessage('Sorry, an error occurred while processing your question.', 'bot');
+    })
+    .finally(() => {
+        input.disabled = false;
+        document.getElementById('sendBtn').disabled = false;
+        input.focus();
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('chatInput').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
+
+    document.getElementById('chatCollapse').addEventListener('hidden.bs.collapse', function() {
+        document.getElementById('chatToggleIcon').className = 'bi bi-chevron-up';
+    });
+    document.getElementById('chatCollapse').addEventListener('shown.bs.collapse', function() {
+        document.getElementById('chatToggleIcon').className = 'bi bi-chevron-down';
+    });
+});
+</script>
+{% endblock %}

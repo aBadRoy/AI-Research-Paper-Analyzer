@@ -1,0 +1,44 @@
+# Environment
+.env
+
+# Database
+database/app.db
+database/*.db-journal
+database/*.db-wal
+database/*.db-shm
+
+# Uploaded files
+uploads/*
+!uploads/.gitkeep
+
+# Generated reports
+reports/*
+!reports/.gitkeep
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environment
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# ChromaDB vector store
+chroma_db/
+
+# Logs
+*.log

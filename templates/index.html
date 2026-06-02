@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}AI Research Paper Analyzer — Home{% endblock %}
+{% block content %}
+
+<div class="hero-section text-center py-5">
+    <div class="container">
+        <!-- Badge -->
+        <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 mb-3">
+            <i class="bi bi-stars"></i> Powered by Google Gemini AI
+        </span>
+
+        <h1 class="display-4 fw-bold text-dark">
+            AI Research Paper <span class="text-primary">Analyzer</span>
+        </h1>
+        <p class="lead text-muted mt-3 mx-auto" style="max-width: 650px;">
+            Upload a research paper PDF and get instant AI-powered analysis.
+            Generate summaries, keywords, practice questions, and deep research insights
+            — all in one place.
+        </p>
+
+        <div class="mt-4">
+            {% if current_user.is_authenticated %}
+                <a href="{{ url_for('dashboard') }}" class="btn btn-primary btn-lg px-5">
+                    <i class="bi bi-grid"></i> Go to Dashboard
+                </a>
+            {% else %}
+                <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg px-4 me-2">
+                    <i class="bi bi-person-plus"></i> Get Started
+                </a>
+                <a href="{{ url_for('login') }}" class="btn btn-outline-primary btn-lg px-4">
+                    <i class="bi bi-box-arrow-in-right"></i> Login
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Feature Cards -->
+<div class="row g-4 mt-3">
+    <div class="col-md-4">
+        <div class="card feature-card h-100 text-center p-3">
+            <div class="card-body">
+                <div class="feature-icon bg-primary bg-opacity-10 mx-auto">
+                    <i class="bi bi-file-earmark-pdf text-primary"></i>
+                </div>
+                <h5 class="fw-bold mt-3">Upload PDF</h5>
+                <p class="card-text text-muted">
+                    Upload any research paper in PDF format. The system validates and securely stores your file.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card feature-card h-100 text-center p-3">
+            <div class="card-body">
+                <div class="feature-icon bg-warning bg-opacity-10 mx-auto">
+                    <i class="bi bi-stars text-warning"></i>
+                </div>
+                <h5 class="fw-bold mt-3">AI Analysis</h5>
+                <p class="card-text text-muted">
+                    Google Gemini AI extracts summaries, keywords, MCQs, viva questions, and research insights.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card feature-card h-100 text-center p-3">
+            <div class="card-body">
+                <div class="feature-icon bg-success bg-opacity-10 mx-auto">
+                    <i class="bi bi-download text-success"></i>
+                </div>
+                <h5 class="fw-bold mt-3">Download Report</h5>
+                <p class="card-text text-muted">
+                    Export the complete analysis as a professional PDF report with all sections included.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
